@@ -521,31 +521,37 @@ export class Selection extends View<Selection.EventArgs> {
     exclude?: Cell,
     otherOptions?: KeyValue,
   ) {
-    const map: { [id: string]: boolean } = {}
+    const processed: Record<string, boolean> = {}
     const excluded: Cell[] = []
 
     if (exclude) {
-      map[exclude.id] = true
+      processed[exclude.id] = true
     }
 
     this.collection.toArray().forEach((cell) => {
       cell.getDescendants({ deep: true }).forEach((child) => {
-        map[child.id] = true
+        processed[child.id] = true
       })
     })
     if (otherOptions && otherOptions.translateBy) {
       const currentCell = this.graph.getCellById(otherOptions.translateBy)
       if (currentCell) {
-        map[currentCell.id] = true
+        processed[currentCell.id] = true
         currentCell.getDescendants({ deep: true }).forEach((child) => {
-          map[child.id] = true
+          processed[child.id] = true
         })
         excluded.push(currentCell)
       }
     }
 
+    const isCellTerminal = (
+      terminal: Edge.TerminalData,
+    ): terminal is Edge.TerminalCellData => {
+      return 'cell' in terminal
+    }
+
     this.collection.toArray().forEach((cell) => {
-      if (!map[cell.id]) {
+      if (!processed[cell.id]) {
         const options = {
           ...otherOptions,
           selection: this.cid,
@@ -553,10 +559,16 @@ export class Selection extends View<Selection.EventArgs> {
         }
         cell.translate(dx, dy, options)
         this.graph.model.getConnectedEdges(cell).forEach((edge) => {
-          if (!map[edge.id]) {
+          if (processed[edge.id]) return
+          if (
+            isCellTerminal(edge.source) &&
+            isCellTerminal(edge.target) &&
+            this.collection.has(edge.source.cell) &&
+            this.collection.has(edge.target.cell)
+          ) {
             edge.translate(dx, dy, options)
-            map[edge.id] = true
           }
+          processed[edge.id] = true
         })
       }
     })

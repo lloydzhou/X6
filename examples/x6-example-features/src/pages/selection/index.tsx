@@ -6,7 +6,7 @@ export default class Example extends React.Component {
   private container: HTMLDivElement
 
   componentDidMount() {
-    const graph = new Graph({
+    const graph: Graph = new Graph({
       container: this.container,
       width: 800,
       height: 600,
@@ -62,7 +62,7 @@ export default class Example extends React.Component {
     })
 
     graph.addEdge({ source: a, target: b })
-    graph.addEdge({ source: b, target: c })
+    graph.addEdge({ source: b, target: c, vertices: [{ x: 325, y: 125 }] })
 
     // graph.toggleMultipleSelection(false)
     // console.log(graph.isMultipleSelection())
