@@ -1,3 +1,40 @@
+## @antv/x6 [1.32.3](https://github.com/antvis/x6/compare/@antv/x6@1.32.2...@antv/x6@1.32.3) (2022-05-31)
+
+
+### Bug Fixes
+
+* :bug: Fixed the error when a node meet an invisiable node in node:embedding event ([#2129](https://github.com/antvis/x6/issues/2129)) ([6ef7f55](https://github.com/antvis/x6/commit/6ef7f55334d9415bce217c9cc5885f1bc084de92))
+
+## @antv/x6 [1.32.2](https://github.com/antvis/x6/compare/@antv/x6@1.32.1...@antv/x6@1.32.2) (2022-05-17)
+
+
+### Bug Fixes
+
+* 🐛 fix minimap error in after resize graph ([#2117](https://github.com/antvis/x6/issues/2117)) ([e1bb928](https://github.com/antvis/x6/commit/e1bb9289b0e5bd8106baaf88e16cbab125c5fc4e))
+
+## @antv/x6 [1.32.1](https://github.com/antvis/x6/compare/@antv/x6@1.32.0...@antv/x6@1.32.1) (2022-05-16)
+
+
+### Bug Fixes
+
+* 🐛 auto zoom minimap graph to fit content ([#2111](https://github.com/antvis/x6/issues/2111)) ([12e3e89](https://github.com/antvis/x6/commit/12e3e8969f35ed14acff16bf62da6ea9012137da))
+
+# @antv/x6 [1.32.0](https://github.com/antvis/x6/compare/@antv/x6@1.31.5...@antv/x6@1.32.0) (2022-05-14)
+
+
+### Features
+
+* ✨ unified minimap interaction between scroller and panning ([#2109](https://github.com/antvis/x6/issues/2109)) ([3c7c06a](https://github.com/antvis/x6/commit/3c7c06ac30b48d563cbfa5dca298789ac6ea1ba2))
+
+## @antv/x6 [1.31.5](https://github.com/antvis/x6/compare/@antv/x6@1.31.4...@antv/x6@1.31.5) (2022-05-09)
+
+
+### Bug Fixes
+
+* :bug: fix the graph function zoomTo not return the graph instance. ([#2090](https://github.com/antvis/x6/issues/2090)) ([692a4ee](https://github.com/antvis/x6/commit/692a4ee1b0c3063580e0e3433922c073cadf1880))
+* 🐛 not rerender tools when edge update ([#2095](https://github.com/antvis/x6/issues/2095)) ([26ce96f](https://github.com/antvis/x6/commit/26ce96f7a20e272b06e5044840d2393815884d87))
+* remove the browserslist configuration in package.json ([#2084](https://github.com/antvis/x6/issues/2084)) ([de59617](https://github.com/antvis/x6/commit/de59617532cb20c0103ac701f44f2d0509b782e0))
+
 ## @antv/x6 [1.31.4](https://github.com/antvis/x6/compare/@antv/x6@1.31.3...@antv/x6@1.31.4) (2022-04-21)
 
 

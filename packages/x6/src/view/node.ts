@@ -1,3 +1,4 @@
+import JQuery from 'jquery'
 import { Util, Config } from '../global'
 import { ArrayExt, FunctionExt, Dom, Vector } from '../util'
 import { Rectangle, Point } from '../geometry'
@@ -463,7 +464,11 @@ export class NodeView<
       portSelectors = portContentSelectors || portLabelSelectors
     }
 
-    Dom.addClass(portElement, 'x6-port')
+    let portClass = 'x6-port'
+    if (port.group) {
+      portClass += ` x6-port-${port.group}`
+    }
+    Dom.addClass(portElement, portClass)
     Dom.addClass(portContentElement, 'x6-port-body')
     Dom.addClass(portLabelElement, 'x6-port-label')
 
@@ -835,8 +840,17 @@ export class NodeView<
 
     // Picks the node with the highest `z` index
     if (options.frontOnly) {
-      candidates = candidates.slice(-1)
+      if (candidates.length > 0) {
+        const zIndexMap = ArrayExt.groupBy(candidates, 'zIndex')
+        const maxZIndex = ArrayExt.max(Object.keys(zIndexMap))
+        if (maxZIndex) {
+          candidates = zIndexMap[maxZIndex]
+        }
+      }
     }
+
+    // Filter the nodes which is invisiable
+    candidates = candidates.filter((candidate) => candidate.visible)
 
     let newCandidateView = null
     const prevCandidateView = data.candidateEmbedView
@@ -969,12 +983,18 @@ export class NodeView<
       if (graph.options.magnetThreshold <= 0) {
         this.startConnectting(e, magnet, x, y)
       }
-
       this.setEventData<Partial<EventData.Magnet>>(e, {
         action: 'magnet',
       })
       this.stopPropagation(e)
     } else {
+      // 只需要阻止port的冒泡 #2258
+      if (
+        Dom.hasClass(magnet, 'x6-port-body') ||
+        JQuery(magnet).closest('.x6-port-body').length > 0
+      ) {
+        this.stopPropagation(e)
+      }
       this.onMouseDown(e, x, y)
     }
 

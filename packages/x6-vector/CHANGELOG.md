@@ -1,3 +1,29 @@
+# @antv/x6-vector [1.4.0](https://github.com/antvis/x6/compare/@antv/x6-vector@1.3.1...@antv/x6-vector@1.4.0) (2022-05-16)
+
+
+### Bug Fixes
+
+* remove the browserslist configuration in package.json ([#2084](https://github.com/antvis/x6/issues/2084)) ([de59617](https://github.com/antvis/x6/commit/de59617532cb20c0103ac701f44f2d0509b782e0))
+
+
+### Features
+
+* ✨ unified minimap interaction between scroller and panning ([#2109](https://github.com/antvis/x6/issues/2109)) ([3c7c06a](https://github.com/antvis/x6/commit/3c7c06ac30b48d563cbfa5dca298789ac6ea1ba2))
+
+# @antv/x6-vector [1.4.0](https://github.com/antvis/x6/compare/@antv/x6-vector@1.3.2...@antv/x6-vector@1.4.0) (2022-05-14)
+
+
+### Features
+
+* ✨ unified minimap interaction between scroller and panning ([#2109](https://github.com/antvis/x6/issues/2109)) ([3c7c06a](https://github.com/antvis/x6/commit/3c7c06ac30b48d563cbfa5dca298789ac6ea1ba2))
+
+## @antv/x6-vector [1.3.2](https://github.com/antvis/x6/compare/@antv/x6-vector@1.3.1...@antv/x6-vector@1.3.2) (2022-05-09)
+
+
+### Bug Fixes
+
+* remove the browserslist configuration in package.json ([#2084](https://github.com/antvis/x6/issues/2084)) ([de59617](https://github.com/antvis/x6/commit/de59617532cb20c0103ac701f44f2d0509b782e0))
+
 ## @antv/x6-vector [1.3.1](https://github.com/antvis/x6/compare/@antv/x6-vector@1.3.0...@antv/x6-vector@1.3.1) (2022-04-05)
 
 
