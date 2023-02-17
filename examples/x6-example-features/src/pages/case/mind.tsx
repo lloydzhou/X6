@@ -176,9 +176,35 @@ const data: MindMapData = {
   ],
 }
 
-export const useMindmapState = (initData = data) => {
+export default function App() {
   const { nodes, edges, setNodes, setEdges, graph, setGraph } = useGraphState()
-  const [state, setState] = useState(initData)
+  const [state, setState] = useState(data)
+
+  const container = useRef()
+  const selection = new Selection({
+    enabled: true,
+  })
+  const keyboard = new Keyboard({
+    enabled: true,
+  })
+  useEffect(() => {
+    const graph = new Graph({
+      container: container.current,
+      width: 800,
+      height: 600,
+      grid: true,
+      interacting: {
+        nodeMovable: false,
+      },
+      connecting: {
+        connectionPoint: 'anchor',
+      },
+    })
+    graph.use(selection)
+    graph.use(keyboard)
+    setGraph(graph)
+  }, [setGraph])
+
   const result = useMemo(() => {
     return Hierarchy.mindmap(state, {
       direction: 'H',
@@ -211,7 +237,6 @@ export const useMindmapState = (initData = data) => {
   }, [state])
 
   useEffect(() => {
-    console.log('result', result)
     const traverse = (res, item) => {
       res.nodes.push({
         ...item.data,
@@ -259,7 +284,6 @@ export const useMindmapState = (initData = data) => {
       return res
     }
     const res = [result].reduce(traverse, { nodes: [], edges: [], parent: '' })
-    console.log('result', res)
     setNodes(res.nodes)
     setEdges(res.edges)
     setTimeout(() => {
@@ -269,19 +293,20 @@ export const useMindmapState = (initData = data) => {
     }, 100)
   }, [result])
 
-  useEffect(() => {
-    console.log('idMap', idMap, nodes, edges)
-  })
-
   const addTopic = useCallback(
     ({ node }) => {
-      console.log('addTopic', node)
       const { id, type } = node.getProp()
       const item = idMap[id]
       if (item) {
         const children = item.children || []
+        let nid = `${id}-${children.length + 1}`
+        if (idMap[nid]) {
+          console.log('duplicate id', nid)
+          nid = nid + Math.random()
+        }
         item.children = children.concat({
-          id: `${id}-${children.length + 1}`,
+          // id: `${id}-${children.length + 1}`,
+          id: nid,
           type: type === 'topic' ? 'topic-branch' : 'topic-child',
           label: `${type === 'topic' ? '分支主题' : '子主题'}${
             children.length + 1
@@ -292,58 +317,57 @@ export const useMindmapState = (initData = data) => {
         setState({ ...state }) //
       }
     },
+    [state, idMap],
+  )
+
+  const removeTopic = useCallback(
+    ({ node }) => {
+      const { id } = node.getProp()
+      const parentId = id.split('-').slice(0, -1).join('-')
+      const parentItem = idMap[parentId]
+      if (parentItem && parentItem.children) {
+        // remove node and children item
+        parentItem.children = parentItem.children.filter((i) => i.id !== id)
+        setState({ ...state }) // trigger react render
+      }
+    },
     [state],
   )
 
   useEffect(() => {
-    console.log('add event')
+    const add = () => {
+      const selection = graph.current.getPlugin('selection')
+      const selectedNodes = selection
+        .getSelectedCells()
+        .filter((item) => item.isNode())
+      if (selectedNodes.length) {
+        addTopic({ node: selectedNodes[0] })
+      }
+    }
+    const remove = () => {
+      const selection = graph.current.getPlugin('selection')
+      const selectedNodes = selection
+        .getSelectedCells()
+        .filter((item) => item.isNode())
+      if (selectedNodes.length) {
+        removeTopic({ node: selectedNodes[0] })
+      }
+    }
     if (graph.current) {
       graph.current.on('add:topic', addTopic)
+      const keyboard = graph.current.getPlugin('keyboard')
+      keyboard.bindKey('tab', add)
+      keyboard.bindKey(['backspace', 'delete'], remove)
     }
     return () => {
       if (graph.current) {
         graph.current.off('add:topic', addTopic)
+        const keyboard = graph.current.getPlugin('keyboard')
+        keyboard.unbindKey('tab', add)
+        keyboard.unbindKey(['backspace', 'delete'], remove)
       }
     }
-  }, [graph.current])
-  return {
-    nodes,
-    edges,
-    setNodes,
-    setEdges,
-    graph,
-    setGraph,
-  }
-}
-
-export default function App() {
-  const { nodes, setNodes, edges, setEdges, graph, setGraph } =
-    useMindmapState()
-
-  const container = useRef()
-  useEffect(() => {
-    const graph = new Graph({
-      container: container.current,
-      width: 800,
-      height: 600,
-      grid: true,
-      interacting: {
-        nodeMovable: false,
-      },
-      connecting: {
-        connectionPoint: 'anchor',
-      },
-    })
-    const selection = new Selection({
-      enabled: true,
-    })
-    graph.use(selection)
-    const keyboard = new Keyboard({
-      enabled: true,
-    })
-    graph.use(keyboard)
-    setGraph(graph)
-  }, [setGraph])
+  }, [graph.current, addTopic, removeTopic])
   return (
     <div className="x6-graph-wrap mindmap">
       <div ref={container} className="x6-graph" />
