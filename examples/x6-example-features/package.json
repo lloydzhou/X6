@@ -29,7 +29,8 @@
     "elkjs": "^0.8.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-helmet": "^6.0.0"
+    "react-helmet": "^6.0.0",
+    "x6-hooks": "^1.0.5"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.2.2",
